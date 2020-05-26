@@ -1,12 +1,13 @@
-package public_test
+package sheet_test
 
 import (
+	"context"
 	"testing"
 
-	"github.com/jupemara/go-spreadsheet-sql/pkg/public"
+	sheet "github.com/jupemara/go-spreadsheet-sql"
 )
 
-func TestSheet(t *testing.T) {
+func TestClient_Query(t *testing.T) {
 	cases := map[string]struct {
 		Query    string
 		Length   int
@@ -40,23 +41,28 @@ func TestSheet(t *testing.T) {
 			[]map[string]string{},
 		},
 	}
-	s, err := public.NewSheet(
+	client, err := sheet.NewClient(
+		context.Background(),
 		"14aayP76anHyRJyeVcTBJMTvqwyPeWZFFBpGffhko9HU",
 		"test",
 	)
 	if err != nil {
-		t.Errorf("unexpcted error: %s", err)
+		t.Errorf("unexpected error: %s", err)
+		return
 	}
 	for _, c := range cases {
-		records, err := s.Query(c.Query)
+		records, err := client.Query(context.Background(), c.Query)
 		if err != nil {
-			t.Errorf("unexpcted error: %s", err)
-			break
+			t.Errorf("unexpected error: %s", err)
 		}
-		if len(records) != c.Length {
-			t.Errorf("expected length: %d, but actual: %d", c.Length, len(records))
+		results, err := records.Data()
+		if err != nil {
+			t.Errorf("unexpected error: %s", err)
 		}
-		for i, record := range records {
+		if len(results) != c.Length {
+			t.Errorf("expected length: %d, but actual: %d", c.Length, len(results))
+		}
+		for i, record := range results {
 			for k, v := range record {
 				if v != c.Contents[i][k] {
 					t.Errorf("expected content: %s, but actual: %s", c.Contents[i][k], v)
