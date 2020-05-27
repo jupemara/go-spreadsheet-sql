@@ -11,24 +11,26 @@ func TestClient_Query(t *testing.T) {
 	cases := map[string]struct {
 		Query    string
 		Length   int
-		Contents []map[string]string
+		Contents []map[string]interface{}
 	}{
 		"should return single row": {
 			`SELECT * WHERE A = "spreadsheet-sql-public001"`,
 			1,
-			[]map[string]string{{
+			[]map[string]interface{}{{
 				"name":  "spreadsheet-sql-public001",
 				"url":   "https://spreadsheet-sql-public001.example.com",
 				"email": "spreadsheet-sql-public001@example.com",
+				"count": float64(1),
 			}},
 		},
 		"should return multiple rows": {
 			`SELECT * WHERE A LIKE "spreadsheet-sql-public00%"`,
 			2,
-			[]map[string]string{{
+			[]map[string]interface{}{{
 				"name":  "spreadsheet-sql-public001",
 				"url":   "https://spreadsheet-sql-public001.example.com",
 				"email": "spreadsheet-sql-public001@example.com",
+				"count": float64(1),
 			}, {
 				"name":  "spreadsheet-sql-public002",
 				"url":   "https://spreadsheet-sql-public002.example.com",
@@ -38,7 +40,7 @@ func TestClient_Query(t *testing.T) {
 		"should return 0 length slice": {
 			`SELECT * WHERE A = "non-existent-user"`,
 			0,
-			[]map[string]string{},
+			[]map[string]interface{}{},
 		},
 	}
 	client, err := sheet.NewClient(
@@ -51,11 +53,11 @@ func TestClient_Query(t *testing.T) {
 		return
 	}
 	for _, c := range cases {
-		records, err := client.Query(context.Background(), c.Query)
+		res, err := client.Query(context.Background(), c.Query)
 		if err != nil {
 			t.Errorf("unexpected error: %s", err)
 		}
-		results, err := records.Data()
+		results, err := res.Data()
 		if err != nil {
 			t.Errorf("unexpected error: %s", err)
 		}
