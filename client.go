@@ -34,10 +34,7 @@ func NewClient(
 	}, nil
 }
 
-// Query (without schema) returns map array.
-// keys of map will be set spreadsheet header,
-// ans values of map will be set each spreadsheet record.
-// note: each record value will be always set as string, even if actual value is number.
+// Query returns Response object.
 func (c *Client) Query(ctx context.Context, q string) (*Response, error) {
 	v := url.Values{}
 	v.Add("headers", "1") // so far header line of each sheet is always 1

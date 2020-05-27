@@ -13,6 +13,9 @@ func NewResponse(buf io.Reader) *Response {
 	return &Response{buf}
 }
 
+// Data converts from raw bytes http response body to map array.
+// keys of map will be set spreadsheet header,
+// and values of map will be set each spreadsheet record.
 func (r *Response) Data() ([]map[string]interface{}, error) {
 	var s schema
 	if err := json.NewDecoder(r.buf).Decode(&s); err != nil {
