@@ -1,10 +1,10 @@
 # go-spreadsheet-sql
 
-A client library for [Google Sheets](https://www.google.com/sheets/about/) with SQL syntax.
+A client library for [Google Sheets](https://www.google.com/sheets/about/) with like SQL syntax.
 As you are familiar, users can fetch and filter actual data on each Sheet by ["=QUERY()"](https://developers.google.com/chart/interactive/docs/querylanguage) .
-This library allows you fetch and filter each sheet record with Golang.
+This library allows you fetch and filter each Sheet record with Golang.
 This library supports public and private Sheet,
-and also supports any authentication method.
+and also supports any authentication method; oauth2, service account, credential json file, etc.
 
 ## install
 
@@ -34,14 +34,80 @@ records, _ := client.Query(
 log.Printf(`results: %+v`, records)
 ```
 
-## client option
+## client parameters
 
 ### required
 
+You have to pass two required arguments; "spreadsheet key" and "worksheet name".
+
+#### spreadsheet key
+
+You can extract "spreadsheet key" from sheet url like following.
+Each spreadsheet url is made up of https://docs.google.com/spreadsheets/d/${SPREADSHEET_KEY}/edit#gid=0 .
+
+#### worksheet name
+
+"worksheet name" is shown at the bottom of browser.
+It is like a tab.
+
 ### optional
 
-## response object
+You can pass credential information by your own methods. For instance (now listing only popuplar options),
 
-## tips
+- credential file path as string
+- credential json as `[]byte`
+- oauth2 token
 
-## API(exported method) design
+For details please see https://google.golang.org/api/option .
+
+## Response object
+
+`sheets.Client.Query` method returns `sheets.Response` object.
+`Response` object has two methods to convert `map` or `json`.
+Those method design is inspired by firestore client library.
+
+firestore client library can return `DocumentSnapshot` as returnd value of `Get` method.
+`DocumentSnapshot` has two methods; `Data` and `DataTo` .
+Our `Response` object has also methods named samely, too.
+
+`Response.Data` method simply returns `[]map[string]interface{}`.
+
+When target sheet has following data structure.
+
+| name    | email               | url                         |
+|---------|---------------------|-----------------------------|
+| user001 | user001@example.com | https://user001.example.com |
+
+Then `Data` method returns data as below.
+
+```golang
+original, _ := res.Data()
+// variabl vs is completely same with following map
+sameWithOriginal := []map[string]interface{}{{
+    "name": "user001",
+    "email": "user001@example.com",
+    "url": "https://user001.example.com",
+}}
+```
+
+`Response.DataTo` method receive one argument as schema information.
+You can use Golang struct similar with json annotated struct.
+
+```golang
+type Schema struct {
+    Name string `json:"name"`
+    Email string `json:"email"`
+    Url string `json:"url"`
+} 
+
+res, _ := client.Query("SELECT *")
+var result Schema
+err := res.DataTo(&s)
+sameWithresult := Schema{
+    Name: "user001",
+    Email: "user001@example.com",
+    Url: "https://user001.example.com",
+}
+```
+
+If you would be happy to be familiar with firestore exported method design, you can see https://godoc.org/cloud.google.com/go/firestore#DocumentSnapshot.DataTo .
