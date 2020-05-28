@@ -1,4 +1,4 @@
-package sheet
+package sheets
 
 type schema struct {
 	Version string `json:"version"`

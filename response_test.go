@@ -1,10 +1,10 @@
-package sheet_test
+package sheets_test
 
 import (
 	"strings"
 	"testing"
 
-	sheet "github.com/jupemara/go-spreadsheet-sql"
+	sheets "github.com/jupemara/go-spreadsheet-sql"
 )
 
 type user2 struct {
@@ -66,7 +66,7 @@ func TestResponse_DataTo(t *testing.T) {
     "parsedNumHeaders": 1
   }
 }`
-	r := sheet.NewResponse(strings.NewReader(raw))
+	r := sheets.NewResponse(strings.NewReader(raw))
 	vs := []user2{}
 	err := r.DataTo(&vs)
 	if err != nil {

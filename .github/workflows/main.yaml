@@ -1,0 +1,23 @@
+name: main
+on: push
+jobs:
+  ci:
+    runs-on: ubuntu-18.04
+    name: ci
+    env:
+      GO_SPREADSHEET_SQL_PRIVATE_SHEET_KEY: ${{ secrets.GO_SPREADSHEET_SQL_PRIVATE_SHEET_KEY }}
+      GO_SPREADSHEET_SQL_CLIENT_ID: ${{ secrets.GO_SPREADSHEET_SQL_CLIENT_ID }}
+      GO_SPREADSHEET_SQL_CLIENT_SECRET: ${{ secrets.GO_SPREADSHEET_SQL_CLIENT_SECRET }}
+      GO_SPREADSHEET_SQL_REFRESH_TOKEN: ${{ secrets.GO_SPREADSHEET_SQL_REFRESH_TOKEN }}
+    steps:
+      - name: checkout source code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+      - name: set up golang
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.14.3'
+      - name: unittest
+        run: |
+          go test ./... -v
