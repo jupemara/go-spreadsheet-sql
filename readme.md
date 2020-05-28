@@ -18,7 +18,7 @@ $ go get -u github.comjupemara/go-spreadsheet-sql
 import (
     "log"
 
-	"google.golang.org/api/option"
+    "google.golang.org/api/option"
     "github.com/jupemara/go-spreadsheet-sql" // actual package name is sheets
 )
 
@@ -47,15 +47,15 @@ Each spreadsheet url is made up of https://docs.google.com/spreadsheets/d/${SPRE
 
 #### worksheet name
 
-"worksheet name" is shown at the bottom of browser.
-It is like a tab.
+"worksheet name" is shown at the bottom of browser like a tab.
 
 ### optional
 
 You can pass credential information by your own methods. For instance (now listing only popuplar options),
 
 - credential file path as string
-- credential json as `[]byte`
+- service account file path as string
+- credential json as `[]byte` (credential json structure must be same with https://github.com/golang/oauth2/blob/master/google/google.go#L99 )
 - oauth2 token
 
 For details please see https://google.golang.org/api/option .
@@ -64,25 +64,25 @@ For details please see https://google.golang.org/api/option .
 
 `sheets.Client.Query` method returns `sheets.Response` object.
 `Response` object has two methods to convert `map` or `json`.
-Those method design is inspired by firestore client library.
+Designing those method signature is inspired by firestore client library.
 
 firestore client library can return `DocumentSnapshot` as returnd value of `Get` method.
 `DocumentSnapshot` has two methods; `Data` and `DataTo` .
-Our `Response` object has also methods named samely, too.
+Our `Response` object has also methods named samely.
 
 `Response.Data` method simply returns `[]map[string]interface{}`.
 
-When target sheet has following data structure.
+When target sheet has following data structure,
 
 | name    | email               | url                         |
 |---------|---------------------|-----------------------------|
 | user001 | user001@example.com | https://user001.example.com |
 
-Then `Data` method returns data as below.
+`Data` method returns data as below.
 
 ```golang
 original, _ := res.Data()
-// variabl vs is completely same with following map
+// variable "original" is completely same with following map
 sameWithOriginal := []map[string]interface{}{{
     "name": "user001",
     "email": "user001@example.com",
@@ -103,7 +103,7 @@ type Schema struct {
 res, _ := client.Query("SELECT *")
 var result Schema
 err := res.DataTo(&s)
-sameWithresult := Schema{
+sameWithResult := Schema{
     Name: "user001",
     Email: "user001@example.com",
     Url: "https://user001.example.com",
