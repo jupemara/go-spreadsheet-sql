@@ -4,6 +4,8 @@ import (
 	"context"
 	"testing"
 
+	"google.golang.org/api/option"
+
 	sheets "github.com/jupemara/go-spreadsheet-sql"
 )
 
@@ -47,6 +49,7 @@ func TestClient_Query(t *testing.T) {
 		context.Background(),
 		"14aayP76anHyRJyeVcTBJMTvqwyPeWZFFBpGffhko9HU",
 		"test",
+		option.WithoutAuthentication(),
 	)
 	if err != nil {
 		t.Errorf("unexpected error: %s", err)
