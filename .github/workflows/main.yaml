@@ -4,6 +4,11 @@ jobs:
   ci:
     runs-on: ubuntu-18.04
     name: ci
+    env:
+      GO_SPREADSHEET_SQL_PRIVATE_SHEET_KEY: ${{ secrets.GO_SPREADSHEET_SQL_PRIVATE_SHEET_KEY }}
+      GO_SPREADSHEET_SQL_CLIENT_ID: ${{ secrets.GO_SPREADSHEET_SQL_CLIENT_ID }}
+      GO_SPREADSHEET_SQL_CLIENT_SECRET: ${{ secrets.GO_SPREADSHEET_SQL_CLIENT_SECRET }}
+      GO_SPREADSHEET_SQL_REFRESH_TOKEN: ${{ secrets.GO_SPREADSHEET_SQL_REFRESH_TOKEN }}
     steps:
       - name: checkout source code
         uses: actions/checkout@v2
