@@ -1,10 +1,10 @@
-package sheet_test
+package sheets_test
 
 import (
 	"context"
 	"testing"
 
-	sheet "github.com/jupemara/go-spreadsheet-sql"
+	sheets "github.com/jupemara/go-spreadsheet-sql"
 )
 
 func TestClient_Query(t *testing.T) {
@@ -43,7 +43,7 @@ func TestClient_Query(t *testing.T) {
 			[]map[string]interface{}{},
 		},
 	}
-	client, err := sheet.NewClient(
+	client, err := sheets.NewClient(
 		context.Background(),
 		"14aayP76anHyRJyeVcTBJMTvqwyPeWZFFBpGffhko9HU",
 		"test",
