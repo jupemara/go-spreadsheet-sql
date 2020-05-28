@@ -9,7 +9,7 @@ import (
 	sheets "github.com/jupemara/go-spreadsheet-sql"
 )
 
-func TestClient_Query(t *testing.T) {
+func TestClient_Query_WithPublicSheet(t *testing.T) {
 	cases := map[string]struct {
 		Query    string
 		Length   int
